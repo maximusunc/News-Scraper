@@ -1,0 +1,25 @@
+nav {
+    background-color: lightblue;
+    height: 100px;
+    margin-bottom: 20px;
+}
+nav .brand-logo {
+    font-size: 60px;
+}
+.scrape {
+    background-color: darkblue;
+}
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+main {
+flex: 1 0 auto;
+}
+a h2{
+    font-size: 30px;
+}
+.page-footer {
+    background-color: lightblue;
+}
