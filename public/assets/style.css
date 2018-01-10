@@ -1,18 +1,26 @@
 nav {
-    background-color: lightblue;
+    background-color: rgb(69,128,199);
     height: 100px;
     margin-bottom: 20px;
 }
 nav .brand-logo {
     font-size: 60px;
+    margin-top: 15px;
 }
-.scrape {
-    background-color: darkblue;
+.scrape:hover, .saved:hover {
+    background-color: rgb(252, 127, 86);
+}
+/* I have to be very specific to change materializes style */
+ ul li a.btn-large {
+    margin-top: 20px;
+    margin-right: 30px;
+    background-color: rgb(255, 68, 0);
 }
 body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    background-color: rgb(2,0,24);
 }
 main {
 flex: 1 0 auto;
@@ -21,5 +29,5 @@ a h2{
     font-size: 30px;
 }
 .page-footer {
-    background-color: lightblue;
+    background-color: rgb(255,71,0);
 }

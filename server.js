@@ -6,6 +6,7 @@ var cheerio = require("cheerio");
 var request = require("request");
 
 var app = express();
+var db = require("./models");
 
 app.use(
     bodyParser.urlencoded({
@@ -16,31 +17,51 @@ app.use(express.static("public"));
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/newsScraper";
 
-mongoose.connect(MONGODB_URI);
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI, {
+  useMongoClient: true
+});
 
-// app.get("/", function(req, res) {
-//     res.send("index.html");
-// });
+app.get("/saved", function(req, res) {
+    db.Save.create(req.body)
+        .then(function(dbSave) {
+            res.json(dbSave);
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+});
 
 app.get("/scrape", function(req, res) {
-    console.log("test");
     request("https://www.npr.org/sections/news/", function(error, response, html) {
         var $ = cheerio.load(html);
-        var results = [];
+        
         $("div.item-info").each(function(i, element) {
-            var title = $(element).find("h2").text();
-            var link = $(element).find("h2").attr("href");
-            var description = $(element).find("p").children().text();
-            console.log(description);
-            results.push({
-                title: title,
-                link: link,
-                description: description
-            });
+            var result = {};
+            result.title = $(element).find("h2").text();
+            result.link = $(element).find("h2").children().attr("href");
+            result.description = $(element).find("p").children().text();
+            db.Article.create(result)
+                .then(function(dbArticle) {
+                    // console.log(dbArticle);
+                    res.json(dbArticle);
+                })
+                .catch(function(err) {
+                    console.log(err);
+                });
         });
-        res.send(results);
     });
-})
+});
+
+app.get("/articles", function(req, res) {
+    db.Article.find({}, function(error, found) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.send(found);
+        };
+    });
+});
 
 app.listen(3000, function() {
     console.log("App running on port 3000");
