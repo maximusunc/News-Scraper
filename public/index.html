@@ -14,7 +14,7 @@
         <div class="nav-wrapper">
             <a href="/" class="brand-logo center">NPR News Scraper</a>
             <ul class="right hide-on-med-and-down">
-                <li><a class="waves-effect waves-light btn-large saved">Saved Articles</a></li>
+                <li><a class="waves-effect waves-light btn-large saved" href="/saved">Saved Articles</a></li>
                 <li><a class="waves-effect waves-light btn-large scrape">Scrape</a></li>
             </ul>
         </div>
@@ -35,5 +35,10 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script type="text/javascript" src="assets/app.js"></script>
+    <script>
+        $.getJSON("/articles", function(data) {
+            displayResults(data);
+        });
+    </script>
 </body>
 </html>
