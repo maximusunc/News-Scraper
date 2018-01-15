@@ -27,31 +27,31 @@ mongoose.connect(MONGODB_URI, {
 app.get("/articles", function(req, res) {
     db.Article.find({}, function(error, found) {
         if (error) {
-            console.log(error);
+            res.json(error);
         } else {
-            res.send(found);
+            res.json(found);
         };
     });
 });
 
 app.post("/saved/:id", function(req, res) {
-    db.Article.findOne({_id: req.params.id}, function(error, found) {
+    db.Article.update({_id: req.params.id}, {$set: {saved: true}}, function(error, result) {
         if (error) {
-            console.log(error);
+            res.json(error);
         } else {
-            db.Save.create({
-                title: found.title,
-                link: found.link,
-                description: found.description
-            })
-            .then(function(dbSave) {
-                res.json(dbSave);
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-        }
-    })
+            res.json(result);
+        };
+    });
+});
+
+app.post("/remove/:id", function(req, res) {
+    db.Article.update({_id: req.params.id}, {$set: {saved: false}}, function(error, result) {
+        if (error) {
+            res.json(error);
+        } else {
+            res.json(result);
+        };
+    });
 });
 
 app.get("/saved", function(req, res) {
@@ -59,33 +59,48 @@ app.get("/saved", function(req, res) {
 });
 
 app.get("/savedArticles", function(req, res) {
-    db.Save.find({}, function(error, found) {
+    db.Article.find({saved: true}, function(error, found) {
         if (error) {
-            console.log(error);
+            res.json(error);
         } else {
-            res.send(found);
+            res.json(found);
         };
     });
 });
 
-app.delete("/remove/:id", function(req, res) {
-    db.Save.remove({_id: req.params.id}, function(error, result) {
-        if (error) {
-            console.log(error);
-        } else {
-            res.send(result);
-        };
-    });
+app.get("/note/:id", function(req, res) {
+    db.Article.findOne({_id: req.params.id})
+        .populate("notes")
+        .then(function(found) {
+            res.json(found);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
 });
 
-app.post("/addNote/:id", function(req, res) {
-    db.Save.update({_id: req.params.id}, {$push: {note: req.body.note}})
-    .then(function(dbNote) {
-        console.log(dbNote);
-    })
-    .catch(function(err) {
-        console.log(err);
-    });
+app.delete("/note/:id", function(req, res) {
+    db.Note.remove({_id: req.params.id})
+        .then(function(dbNote) {
+            res.json(dbNote);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+});
+
+app.post("/note/:id", function(req, res) {
+    console.log(req.body.body);
+    db.Note.create(req.body)
+        .then(function(dbNote) {
+            return db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {notes: dbNote._id}});
+        })
+        .then(function(dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function(err) {
+            res.json(err); 
+        });
 });
 
 app.get("/scrape", function(req, res) {
@@ -99,10 +114,10 @@ app.get("/scrape", function(req, res) {
             result.description = $(element).find("p").children().text();
             db.Article.create(result)
                 .then(function(dbArticle) {
-                    console.log(dbArticle);
+                    res.json(dbArticle);
                 })
                 .catch(function(err) {
-                    console.log("test");
+                    res.send("test");
                 });
         });
     });

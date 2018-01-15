@@ -28,6 +28,9 @@ flex: 1 0 auto;
 a h2{
     font-size: 30px;
 }
+.remove {
+    margin-right: 20px;
+}
 .page-footer {
     background-color: rgb(255,71,0);
 }
