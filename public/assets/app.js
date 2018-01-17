@@ -1,11 +1,10 @@
 $(".scrape").on("click", function(event) {
     event.preventDefault();
-    $.get("/scrape", function(error, results) {
-        if (error) {
-            console.log(error);
-        } else {
-            location.reload();
-        };
+    $.ajax({
+        method: "GET",
+        url: "/scrape"
+    }).then(function(data) {
+        
     });
 });
 
@@ -19,8 +18,8 @@ $(".addNote").on("click", function() {
             body: newNote
         }
     }).then(function(data) {
-        console.log("Success");
         $("#noteBody").val("");
+        $("#notesModal").modal("close");
     });
 });
 
@@ -37,6 +36,19 @@ function displayResults(data) {
     });
     
     save();
+};
+
+function save() {
+    $(".save").on("click", function(event) {
+        var id = $(this).data("id");
+        $.ajax({
+            method: "POST",
+            url: "/saved/" + id,
+        }).then(function(data) {
+            console.log(data);
+            window.location.replace("/saved");
+        });
+    });
 };
 
 function displaySaved(data) {
@@ -64,19 +76,6 @@ function displaySaved(data) {
     note();
 };
 
-function save() {
-    $(".save").on("click", function(event) {
-        var id = $(this).data("id");
-        $.ajax({
-            method: "POST",
-            url: "/saved/" + id,
-        }).then(function(data) {
-            console.log(data);
-            window.location.replace("/saved");
-        });
-    });
-};
-
 function remove() {
     $(".remove").on("click", function(event) {
         var id = $(this).data("id");
@@ -100,24 +99,27 @@ function note() {
             method: "GET",
             url: "/note/" + id,
         }).then(function(data) {
-            $("#modalHeader").html("<h5>Notes for Article: " + data._id + "</h5>");
+            $("#modalHeader").html("<button id='closeModal' class='modal-action modal-close right'><i class='material-icons'>close</i></button><h4 class='center'><strong>Notes for Article: " + data._id + "</strong></h4>");
             $("#notes").empty();
             data.notes.forEach(function(element) {
-                $("#notes").append("<div><p>" + element.body + "<button class='deleteNote' data-id=" + element._id + " ><i class='material-icons'>delete</i></button></p></div>");
+                $("#notes").append("<div class='eachNote container'><p class='center'>" + element.body + "<button class='deleteNote right' data-id=" + element._id + " data-article=" + data._id + "><i class='material-icons'>delete</i></button></p></div>");
             });
             $(".addNote").attr("id", data._id);
+
+            deleteNote();
         });
     });
 };
 
 function deleteNote() {
     $(".deleteNote").on("click", function() {
+        var articleId = $(this).attr("data-article");
         var id = $(this).attr("data-id");
         $.ajax({
             method: "DELETE",
-            url: "/note/" + id
+            url: "/note/" + id + "/" + articleId
         }).then(function(data) {
-            console.log("Success");
+            $("#notesModal").modal("close");
         });
     });
 };

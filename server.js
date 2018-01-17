@@ -79,18 +79,7 @@ app.get("/note/:id", function(req, res) {
         });
 });
 
-app.delete("/note/:id", function(req, res) {
-    db.Note.remove({_id: req.params.id})
-        .then(function(dbNote) {
-            res.json(dbNote);
-        })
-        .catch(function(err) {
-            res.json(err);
-        });
-});
-
 app.post("/note/:id", function(req, res) {
-    console.log(req.body.body);
     db.Note.create(req.body)
         .then(function(dbNote) {
             return db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {notes: dbNote._id}});
@@ -103,7 +92,23 @@ app.post("/note/:id", function(req, res) {
         });
 });
 
+app.delete("/note/:id/:articleId", function(req, res) {
+    var id = req.params.id;
+    var articleId = req.params.articleId;
+    db.Article.findOneAndUpdate({_id: articleId}, {$pull: {notes: id}})
+        .then(function(dbNote) {
+            return db.Note.remove({_id: id});
+        })
+        .then(function(dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+});
+
 app.get("/scrape", function(req, res) {
+    var counter = 0;
     request("https://www.npr.org/sections/news/", function(error, response, html) {
         var $ = cheerio.load(html);
         
@@ -114,12 +119,14 @@ app.get("/scrape", function(req, res) {
             result.description = $(element).find("p").children().text();
             db.Article.create(result)
                 .then(function(dbArticle) {
-                    res.json(dbArticle);
+                    counter++;
+                    console.log(counter);
                 })
                 .catch(function(err) {
-                    res.send("test");
+                    res.json(err);
                 });
         });
+        res.json(counter);
     });
 });
 

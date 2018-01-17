@@ -7,7 +7,10 @@ nav .brand-logo {
     font-size: 60px;
     margin-top: 15px;
 }
-.scrape:hover, .saved:hover {
+.scrape:hover, .saved:hover, .back:hover {
+    background-color: rgb(252, 127, 86);
+}
+button:active {
     background-color: rgb(252, 127, 86);
 }
 /* I have to be very specific to change materializes style */
@@ -27,6 +30,28 @@ flex: 1 0 auto;
 }
 a h2{
     font-size: 30px;
+}
+#notesModal {
+    min-height: 400px;
+}
+#modalHeader {
+    margin: 20px 0px 30px 0px;
+}
+#closeModal {
+    margin-right: 10px;
+}
+.eachNote {
+    padding: 15px 0px;
+    border: 1px gray solid;
+    margin: 5px auto;
+}
+.deleteNote {
+    margin-right: 10px;
+    background-color: rgb(255, 68, 0);
+}
+.deleteNote i {
+    margin-top: 5px;
+    color: white;
 }
 .remove {
     margin-right: 20px;
