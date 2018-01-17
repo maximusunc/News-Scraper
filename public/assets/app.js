@@ -29,8 +29,10 @@ function displayResults(data) {
         article += "<a href='" + element.link + "'><h2>" + element.title + "</h2></a>";
         article += "<p>" + element.description + "</p></div>";
         if (element.saved === false) { 
-            article += "<div class='card-action'><button class='save' data-id=" + element._id + "><i class='material-icons left'>save</i>Save Article</button></div>";
-        };
+            article += "<div class='card-action'><a class='btn save' data-id=" + element._id + "><i class='material-icons left'>save</i>Save Article</a></div>";
+        } else {
+            article += "<div class='card-action'><a class='btn disabled' data-id=" + element._id + "><i class='material-icons left'>save</i>Saved</a></div>";
+        }
         article += "</div></div></div>";
         $(".articles").append(article);
     });
@@ -62,8 +64,8 @@ function displaySaved(data) {
             var article = "<div class='row'><div class='card blue-grey darken-1'><div class='card-content white-text'>";
             article += "<a href='" + element.link + "'><h2>" + element.title + "</h2></a>";
             article += "<p>" + element.description + "</p></div>";
-            article += "<div class='card-action'><button class='remove' data-id=" + element._id + "><i class='material-icons left'>delete</i>Remove From Saved</button>";
-            article += "<button class='note modal-trigger' data-target='notesModal' data-id=" + element._id + "><i class='material-icons left'>visibility</i>View Notes</button>";
+            article += "<div class='card-action'><a class='btn remove' data-id=" + element._id + "><i class='material-icons left'>delete</i>Remove From Saved</a>";
+            article += "<a class='btn note modal-trigger' data-target='notesModal' data-id=" + element._id + "><i class='material-icons left'>visibility</i>View Notes</a>";
             article += "</div></div></div></div>";
             $(".articles").append(article);
             

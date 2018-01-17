@@ -14,12 +14,12 @@ This is a news article scraping app! It goes to NPR's articles page and grabs th
 
 #### Home Page
 
-![Home Page](public/assets/images/NPRhome)
+![Home Page](https://github.com/maximusunc/News-Scraper/blob/master/public/assets/images/NPRhome.png)
 
 #### Saved Articles
 
-![Saved Page](public/assets/images/NPRsaved)
+![Saved Page](public/assets/images/NPRsaved.png)
 
 #### Notes Modal
 
-![Notes Modal](public/assets/images/NPRnotes)
+![Notes Modal](public/assets/images/NPRnotes.png)

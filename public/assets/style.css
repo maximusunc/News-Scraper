@@ -13,6 +13,9 @@ nav .brand-logo {
 button:active {
     background-color: rgb(252, 127, 86);
 }
+.btn:hover {
+    background-color: rgb(252, 127, 86);
+}
 /* I have to be very specific to change materializes style */
  ul li a.btn-large {
     margin-top: 20px;
@@ -30,6 +33,9 @@ flex: 1 0 auto;
 }
 a h2{
     font-size: 30px;
+}
+.btn {
+    background-color: rgb(255, 68, 0);
 }
 #notesModal {
     min-height: 400px;
