@@ -24,6 +24,8 @@ mongoose.connect(MONGODB_URI, {
   useMongoClient: true
 });
 
+var port = process.env.PORT || 3000;
+
 app.get("/articles", function(req, res) {
     db.Article.find({}, function(error, found) {
         if (error) {
@@ -130,6 +132,6 @@ app.get("/scrape", function(req, res) {
     });
 });
 
-app.listen(3000, function() {
-    console.log("App running on port 3000");
+app.listen(port, function() {
+    console.log("App running on port " + port);
 });
